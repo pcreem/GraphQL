@@ -1,0 +1,4 @@
+.vscode
+reference
+backend/node_modules
+backend/prisma/.env
