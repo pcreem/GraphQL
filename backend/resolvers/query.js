@@ -1,7 +1,7 @@
 function info(parent, args, context, info) {
   const Posts = context.prisma.post.findMany({
     where: {
-      authorId: parseInt(args.author)
+      authorId: parseInt(args.authorId)
     }
   })
 
