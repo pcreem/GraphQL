@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import './styles/index.css'
 import App from './components/App'
 import * as serviceWorker from './serviceWorker';
+import { Container } from 'react-bootstrap';
 
 import { Provider, Client, dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
@@ -15,9 +16,11 @@ const client = new Client({
 })
 
 ReactDOM.render(
-  <Provider value={client}>
-    <App />
-  </Provider>,
+  <Container>
+    <Provider value={client}>
+      <App />
+    </Provider>
+  </Container>,
   document.getElementById('root')
 )
 
