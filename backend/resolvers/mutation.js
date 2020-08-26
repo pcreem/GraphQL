@@ -3,7 +3,7 @@ function createPost(parent, args, context, info) {
     data: {
       title: args.title,
       content: args.content,
-      authorId: {
+      author: {
         connect: { id: parseInt(args.authorId) },
       },
     },
