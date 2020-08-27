@@ -13,7 +13,17 @@ function createPost(parent, args, context, info) {
 
 function updatePost(parent, args, context, info) {
   const updatedPost = context.prisma.post.update({
-    where: { id: parseInt(args.postId) },
+    where: {
+      AND: [
+        {
+          id: parseInt(args.postId),
+        },
+        {
+          authorId: parseInt(args.authorId),
+        },
+      ],
+
+    },
     data: {
       title: args.title,
       content: args.content,
@@ -24,7 +34,10 @@ function updatePost(parent, args, context, info) {
 
 function deletePost(parent, args, context, info) {
   const deletePost = context.prisma.post.delete({
-    where: { id: parseInt(args.postId) },
+
+    where: {
+      id: parseInt(args.postId),
+    },
   })
 
   return deletePost
