@@ -3,13 +3,13 @@ import { Toast, Modal, Form, Button } from 'react-bootstrap';
 import gql from 'graphql-tag';
 import { useMutation } from 'urql';
 
-// const DELETE_POST = gql`
-//   mutation deletePost($postId:ID!) {
-//     deletePost(postId: $postId) {
-//       id
-//     }
-//   }
-// `
+const DELETE_POST = gql`
+  mutation deletePost($postId:ID!) {
+    deletePost(postId: $postId) {
+      id
+    }
+  }
+`
 
 const EDIT_POST = gql`
   mutation updatePost($postId:ID!, $title: String!, $content: String) {
@@ -22,16 +22,15 @@ const EDIT_POST = gql`
 `
 
 const Post = ({ post }) => {
-  // const [showA, setShowA] = React.useState(true);
-  // const toggleShowA = () => setShowA(!showA);
+  const [showA, setShowA] = React.useState(true);
+  const toggleShowA = () => setShowA(!showA);
 
-  // const [deleteState, executeDelete] = useMutation(DELETE_POST)
-  // const postId = post.id
-  // const del = React.useCallback(() => {
-  //   executeDelete({ postId })
-  // }, [executeDelete, postId])
-
+  const [deleteState, executeDelete] = useMutation(DELETE_POST)
   const postId = post.id
+  const del = React.useCallback(() => {
+    executeDelete({ postId })
+  }, [executeDelete, postId])
+
   const [showB, setShowB] = React.useState(false);
   const toggleShowB = () => setShowB(!showB);
   const [content, setContent] = React.useState('')
@@ -66,8 +65,7 @@ const Post = ({ post }) => {
       </Modal>
 
 
-      {/* <Toast show={showA} onClose={toggleShowA} disabled={deleteState.fetching} onClick={del}> */}
-      <Toast>
+      <Toast show={showA} disabled={deleteState.fetching} onClose={() => { del(); toggleShowA(); }}>
         <Toast.Header onClick={toggleShowB}>
           <strong className="mr-auto">{post.title}</strong>
         </Toast.Header>
