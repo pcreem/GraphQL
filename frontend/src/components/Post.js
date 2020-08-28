@@ -1,7 +1,28 @@
 import React from 'react'
 import { Toast, Modal, Form, Button } from 'react-bootstrap';
 import gql from 'graphql-tag';
-import { useMutation } from 'urql';
+import { useQuery, useMutation } from 'urql';
+
+const FEED_QUERY = gql`
+  {
+    info(authorId:"1"){
+        id
+        title
+        content
+        createdAt
+      }
+  }
+`
+
+const UPSERT_POST = gql`
+  mutation upsertPost($authorId: ID!, $postId:ID!, $title: String!, $content: String) {
+    upsertPost(authorId:$authorId, postId: $postId, title: $title, content: $content) {
+      id
+      content
+      title
+    }
+  }
+`
 
 const DELETE_POST = gql`
   mutation deletePost($postId:ID!) {
@@ -11,44 +32,65 @@ const DELETE_POST = gql`
   }
 `
 
-const EDIT_POST = gql`
-  mutation updatePost($postId:ID!, $title: String!, $content: String) {
-    updatePost(postId: $postId, title: $title, content: $content) {
-      id
-      content
-      title
-    }
-  }
-`
+function refreshPage() {
+  window.location.reload(false);
+}
+
+function PostForm() {
+  //Upsert Section
+  let postId = 0
+  const authorId = "1"
+  const [content, setContent] = React.useState('')
+  const [title, setTitle] = React.useState('')
+
+  const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
+  const upsert = React.useCallback(() => {
+    executeUpsert({ authorId, postId, title, content })
+  }, [executeUpsert, authorId, postId, title, content])
+
+
+  return (
+    <Form >
+      <Form.Group>
+        <Form.Control type="text" placeholder={'title...'} value={title}
+          onChange={e => setTitle(e.target.value)} />
+      </Form.Group>
+      <Form.Group controlId="exampleForm.ControlTextarea1">
+        <Form.Control as="textarea" placeholder={'content...'} rows="3" value={content}
+          onChange={e => setContent(e.target.value)} />
+      </Form.Group>
+      <Button variant="outline-dark" disabled={upsertState.fetching} onClick={() => { upsert(); refreshPage(); }} >Finish</Button>
+    </Form>
+  )
+}
 
 const Post = ({ post }) => {
+  //Delete Section
+  const postId = post.id
+  const authorId = "1"
+
   const [showA, setShowA] = React.useState(true);
   const toggleShowA = () => setShowA(!showA);
+  const [showB, setShowB] = React.useState(false);
+  const toggleShowB = () => setShowB(!showB);
 
   const [deleteState, executeDelete] = useMutation(DELETE_POST)
-  const postId = post.id
   const del = React.useCallback(() => {
     executeDelete({ postId })
   }, [executeDelete, postId])
 
-  const [showB, setShowB] = React.useState(false);
-  const toggleShowB = () => setShowB(!showB);
+  //Upsert Section
   const [content, setContent] = React.useState('')
   const [title, setTitle] = React.useState('')
 
-  const [editState, executeEdit] = useMutation(EDIT_POST)
-  // let [title, content] = [post.title, post.content]
-  const edit = React.useCallback(() => {
-    executeEdit({ postId, title, content })
-    console.log(postId, title, content)
-  }, [executeEdit, postId, title, content])
+  const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
+  const upsert = React.useCallback(() => {
+    executeUpsert({ authorId, postId, title, content })
+  }, [executeUpsert, authorId, postId, title, content])
 
   return (
-    <div>
+    <>
       <Modal show={showB}>
-        <Modal.Header closeButton>
-          <Modal.Title>Login Form</Modal.Title>
-        </Modal.Header>
         <Modal.Body>
           <Form >
             <Form.Group>
@@ -59,23 +101,49 @@ const Post = ({ post }) => {
               <Form.Control as="textarea" placeholder={post.content} rows="3" value={content}
                 onChange={e => setContent(e.target.value)} />
             </Form.Group>
-            <Button variant="outline-dark" disabled={editState.fetching} onClick={() => { edit(); toggleShowB(); }} >Finish</Button>
+            <Button variant="outline-dark" disabled={upsertState.fetching} onClick={() => { upsert(); toggleShowB(); }} >Finish</Button>
           </Form>
         </Modal.Body>
       </Modal>
 
 
       <Toast show={showA} disabled={deleteState.fetching} onClose={() => { del(); toggleShowA(); }}>
-        <Toast.Header onClick={toggleShowB}>
-          <strong className="mr-auto">{post.title}</strong>
+        <Toast.Header >
+          <strong onClick={toggleShowB} className="mr-auto">{post.title}</strong>
         </Toast.Header>
         <Toast.Body onClick={toggleShowB}>{post.content}</Toast.Body>
       </Toast>
-    </div>
+    </>
   )
+}
+
+const PostList = () => {
+  const [result] = useQuery({ query: FEED_QUERY })
+  const { data, fetching, error } = result
+
+  if (fetching) return <div>Fetching</div>
+  if (error) return <div>Error</div>
+
+  const postsToRender = data.info
+
+  return (
+    <div>
+      {postsToRender.map(post => <Post key={post.id} post={post} />)}
+    </div>
+  );
+};
+
+const Combine = () => {
+  return (
+    <>
+      <PostForm />
+      <hr></hr>
+      <PostList />
+    </>
+  )
+
 }
 
 
 
-
-export default Post
+export default Combine

@@ -24,6 +24,28 @@ function updatePost(parent, args, context, info) {
   return updatedPost
 }
 
+function upsertPost(parent, args, context, info) {
+  const upsertPost = context.prisma.post.upsert({
+    where: {
+      id: parseInt(args.postId)
+    },
+    update: {
+      title: args.title,
+      content: args.content,
+    },
+    create: {
+      title: args.title,
+      content: args.content,
+      author: {
+        connect: { id: parseInt(args.authorId) },
+      },
+    },
+  })
+
+  return upsertPost
+}
+
+
 function deletePost(parent, args, context, info) {
   const deletePost = context.prisma.post.delete({
 
@@ -39,5 +61,6 @@ function deletePost(parent, args, context, info) {
 module.exports = {
   createPost,
   updatePost,
+  upsertPost,
   deletePost
 }

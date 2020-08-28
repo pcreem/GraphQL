@@ -1,13 +1,11 @@
 import React from 'react'
-import PostList from './PostList'
-import CreatePost from './CreatePost'
+import Combine from './Post'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   return (
     <div>
-      <CreatePost />
-      <PostList />
+      <Combine />
     </div>
   )
 }

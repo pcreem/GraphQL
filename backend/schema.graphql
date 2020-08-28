@@ -5,6 +5,7 @@ type Query {
 type Mutation {
   createPost (authorId: ID!, title: String!, content: String): Post!
   updatePost (postId:ID!, title: String!, content: String): Post!
+  upsertPost (authorId: ID!, postId:ID!, title: String!, content: String): Post!
   deletePost (postId:ID!): Post
 }
 
