@@ -32,7 +32,7 @@ const CreatePost = props => {
           onChange={e => setTitle(e.target.value)} />
       </Form.Group>
       <Form.Group controlId="exampleForm.ControlTextarea1">
-        <Form.Control as="textarea" placeholder="content..." rows="10" value={content}
+        <Form.Control as="textarea" placeholder="content..." rows="3" value={content}
           onChange={e => setContent(e.target.value)} />
       </Form.Group>
       <Button variant="outline-dark" disabled={state.fetching} onClick={finish}>Finish</Button>

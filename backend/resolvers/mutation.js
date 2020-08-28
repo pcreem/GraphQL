@@ -14,15 +14,7 @@ function createPost(parent, args, context, info) {
 function updatePost(parent, args, context, info) {
   const updatedPost = context.prisma.post.update({
     where: {
-      AND: [
-        {
-          id: parseInt(args.postId),
-        },
-        {
-          authorId: parseInt(args.authorId),
-        },
-      ],
-
+      id: parseInt(args.postId),
     },
     data: {
       title: args.title,
