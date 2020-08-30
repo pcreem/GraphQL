@@ -36,6 +36,7 @@ function refreshPage() {
   window.location.reload(false);
 }
 
+
 function PostForm() {
   //Upsert Section
   let postId = 0
@@ -45,7 +46,7 @@ function PostForm() {
 
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
-    executeUpsert({ authorId, postId, title, content })
+    if (title.length !== 0 || content.length !== 0) { executeUpsert({ authorId, postId, title, content }) }
   }, [executeUpsert, authorId, postId, title, content])
 
 
@@ -85,7 +86,7 @@ const Post = ({ post }) => {
 
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
-    executeUpsert({ authorId, postId, title, content })
+    if (title.length !== 0 || content.length !== 0) { executeUpsert({ authorId, postId, title, content }) }
   }, [executeUpsert, authorId, postId, title, content])
 
   return (
