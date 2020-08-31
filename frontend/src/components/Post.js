@@ -1,5 +1,5 @@
 import React from 'react'
-// import { ListGroup, Modal } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Col, Row, Alert, Spinner } from 'react-bootstrap';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'urql';
 
@@ -21,86 +21,100 @@ const UPSERT_POST = gql`
   }
 `
 
-// const DELETE_POST = gql`
-//   mutation deletePost($postId:ID!) {
-//     deletePost(postId: $postId) {
-//       id
-//     }
-//   }
-// `
+const DELETE_POST = gql`
+  mutation deletePost($postId:ID!) {
+    deletePost(postId: $postId) {
+      id
+    }
+  }
+`
 
-// function refreshPage() {
-//   window.location.reload(false);
-// }
+function refreshPage() {
+  window.location.reload(false);
+}
 
-const Post = () => {
-  const authorId = "1"
-  const postId = "1"
+
+function PostForm() {
   //Upsert Section
+  let postId = 0
+  const authorId = "1"
   const [title, setTitle] = React.useState('')
+
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
     if (title.length !== 0) { executeUpsert({ authorId, postId, title }) }
   }, [executeUpsert, authorId, postId, title])
 
 
-
-  //Delete Section
-  // const [postId, setPostId] = React.useState('')
-  // function setPId(postid) {
-  //   return setPostId(postid)
-  // }
-
-  // const [showA, setShowA] = React.useState(true);
-  // const toggleShowA = () => setShowA(!showA);
-  // const [showB, setShowB] = React.useState(false);
-  // const toggleShowB = () => setShowB(!showB);
-
-  // const [deleteState, executeDelete] = useMutation(DELETE_POST)
-  // const del = React.useCallback(() => {
-  //   executeDelete({ postId })
-  // }, [executeDelete, postId])
-
-  const [result] = useQuery({ query: FEED_QUERY })
-  const { data, fetching, error } = result
-
-  if (fetching) return <div>Fetching</div>
-  if (error) return <div>Error</div>
-
-  console.log(data.info)
-
   return (
-    <>
-      <form className="form-inline">
-        <input type="text" className="form-control" placeholder="add a new todo..." value={title}
-          onChange={e => setTitle(e.target.value)} />
-        <button type="submit" className="btn btn-default" disabled={upsertState.fetching} onClick={() => { upsert(); }}>Add</button>
-      </form>
-
-      {/* {postsToRender.map(post =>
-        <React.Fragment key={post.id}>
-          <Modal show={showB}>
-            <Modal.Body>
-              <form className="form-inline">
-                <input type="text" className="form-control" placeholder={post.title} value={title}
-                  onChange={e => setTitle(e.target.value.length === 0 ? post.title : e.target.value)} />
-                <button type="submit" className="btn btn-default" disabled={upsertState.fetching} onClick={() => { upsert(); setPId(post.id) }} >Update</button>
-              </form>
-            </Modal.Body>
-          </Modal>
-
-          <ListGroup>
-            <ListGroup.Item show={showA}>
-              <p onClick={toggleShowB} className="mr-auto">{post.title}</p>
-              <button type="button" disabled={deleteState.fetching} onClick={() => { setPId(post.id); del(); toggleShowA(); }}>&times;</button>
-            </ListGroup.Item>
-          </ListGroup>
-        </React.Fragment>
-      )} */}
-    </>
+    <Col sm={6}>
+      <InputGroup className="mb-3">
+        <FormControl
+          placeholder='Add Todo...'
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+        />
+        <InputGroup.Append>
+          <Button
+            variant="outline-secondary"
+            disabled={upsertState.fetching}
+            onClick={() => { upsert(); refreshPage(); }}
+          >Add</Button>
+        </InputGroup.Append>
+      </InputGroup>
+    </Col>
   )
 }
 
+function Post({ post }) {
+  //Delete Section
+  const postId = post.id
+  const [deleteState, executeDelete] = useMutation(DELETE_POST)
+  const del = React.useCallback(() => {
+    executeDelete({ postId })
+  }, [executeDelete, postId])
 
+  return (
+    <Col sm={6}>
+      <Alert variant="light" disabled={deleteState.fetching} onClose={() => { del(); refreshPage(); }} dismissible>
+        <p>{post.title}</p>
+      </Alert>
+    </Col>
+  )
+}
 
-export default Post
+const PostList = () => {
+  const [result] = useQuery({ query: FEED_QUERY })
+  const { data, fetching, error } = result
+
+  if (fetching) return <><Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner></>
+
+  if (error) return <div>Error</div>
+
+  const postsToRender = data.info
+  return (
+    <>
+      {postsToRender.map(post => <Post key={post.id} post={post} />)}
+    </>
+  );
+};
+
+const Combine = () => {
+  return (
+    <>
+      <br></br>
+      <Row className="justify-content-md-center">
+        <PostForm />
+      </Row>
+      <br></br>
+      <Row className="justify-content-md-center">
+        <PostList />
+      </Row>
+    </>
+  )
+
+}
+
+export default Combine
