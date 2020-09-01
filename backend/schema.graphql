@@ -3,10 +3,13 @@ type Query {
 }
 
 type Mutation {
-  createPost (authorId: ID!, title: String!, content: String): Post!
+  createPost (title: String!, content: String): Post!
   updatePost (postId:ID!, title: String!, content: String): Post!
-  upsertPost (authorId: ID!, postId:ID!, title: String!, content: String): Post!
+  upsertPost (postId:ID!, title: String!, content: String): Post!
   deletePost (postId:ID!): Post
+
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
 }
 
 type Post {
@@ -17,9 +20,14 @@ type Post {
   createdAt: String!
 }
 
+type AuthPayload {
+  token: String
+  user: User
+}
+
 type User {
   id: ID!
-  name: String!
+  name: String
   email: String!
   posts: [Post!]!
 }
