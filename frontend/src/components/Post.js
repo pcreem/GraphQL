@@ -2,6 +2,7 @@ import React from 'react'
 import { InputGroup, FormControl, Button, Col, Row, Alert, Spinner } from 'react-bootstrap';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'urql';
+// import { getToken, deleteToken } from '../token'
 
 const FEED_QUERY = gql`
   {

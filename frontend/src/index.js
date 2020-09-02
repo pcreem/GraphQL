@@ -4,6 +4,7 @@ import './styles/index.css'
 import App from './components/App'
 import * as serviceWorker from './serviceWorker';
 import { Container } from 'react-bootstrap';
+import { getToken } from './token'
 
 import { Provider, Client, dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
@@ -12,6 +13,12 @@ const cache = cacheExchange({})
 
 const client = new Client({
   url: 'http://localhost:4000',
+  fetchOptions: () => {
+    const token = getToken()
+    return {
+      headers: { authorization: token ? `Bearer ${token}` : '' }
+    }
+  },
   exchanges: [dedupExchange, cache, fetchExchange],
 })
 
