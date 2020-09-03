@@ -21,9 +21,9 @@ const LOGIN_MUTATION = gql`
 `
 
 const Login = props => {
-  // Used to switch between login and signup
+  // Used to switch between login and signup button
   const [switchLogin, setSwitch] = React.useState(true)
-
+  const [isLogin, setLogin] = React.useState(!!getToken())
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [name, setName] = React.useState('')
@@ -37,8 +37,8 @@ const Login = props => {
       .then(({ data }) => {
         const token = data && data[switchLogin ? 'login' : 'signup'].token
         if (token) {
-          console.log(data)
           setToken(token)
+          setLogin(!!getToken())
         }
       });
   }, [executeMutation, switchLogin, email, password, name]);
@@ -68,7 +68,8 @@ const Login = props => {
             </Form.Group>
             <Button variant="outline-secondary"
               disabled={state.fetching}
-              onClick={() => { mutate(); }} type="submit">
+
+              onClick={() => { mutate(); }}>
               {switchLogin ? "login" : "create account"}
             </Button>{' '}
             <Button variant="outline-secondary"
@@ -77,15 +78,17 @@ const Login = props => {
             >
               {switchLogin ? 'need to create an account?' : 'already have an account?'}
             </Button>
-
-            <Button variant="outline-secondary"
+            {isLogin && (<Button variant="outline-secondary"
               disabled={state.fetching}
-              onClick={() => { deleteToken(); }} >
+
+              onClick={() => { deleteToken(); setLogin(!!getToken()); }} >
               {"deleteToken"}
-            </Button>
+            </Button>)}
+
 
             <Button variant="outline-secondary"
               disabled={state.fetching}
+
               onClick={() => { getToken(); console.log(getToken()) }} >
               {"getToken"}
             </Button>
