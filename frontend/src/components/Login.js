@@ -3,6 +3,7 @@ import { Form, Button, Col, Row } from 'react-bootstrap';
 import gql from 'graphql-tag'
 import { useMutation } from 'urql'
 import { setToken, getToken, deleteToken } from '../token'
+import Combine from './Post'
 
 const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
@@ -78,20 +79,27 @@ const Login = props => {
             >
               {switchLogin ? 'need to create an account?' : 'already have an account?'}
             </Button>
-            {isLogin && (<Button variant="outline-secondary"
+            {isLogin && (
+              <>
+                {/* <Button variant="outline-secondary"
+                  disabled={state.fetching}
+
+                  onClick={() => { deleteToken(); setLogin(!!getToken()); }} >
+                  {"deleteToken"}
+                </Button> */}
+
+                < Combine handleLogout={() => { deleteToken(); setLogin(!!getToken()); }} />
+              </>
+            )
+            }
+
+
+            {/* <Button variant="outline-secondary"
               disabled={state.fetching}
 
-              onClick={() => { deleteToken(); setLogin(!!getToken()); }} >
-              {"deleteToken"}
-            </Button>)}
-
-
-            <Button variant="outline-secondary"
-              disabled={state.fetching}
-
-              onClick={() => { getToken(); console.log(getToken()) }} >
+              onClick={() => { getToken(); }} >
               {"getToken"}
-            </Button>
+            </Button> */}
 
           </Form>
         </Col>

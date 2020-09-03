@@ -14,8 +14,8 @@ const FEED_QUERY = gql`
 `
 
 const UPSERT_POST = gql`
-  mutation upsertPost($authorId: ID!, $postId:ID!, $title: String!) {
-    upsertPost(authorId:$authorId, postId: $postId, title: $title) {
+  mutation upsertPost( $postId:ID!, $title: String!) {
+    upsertPost( postId: $postId, title: $title) {
       id
       title
     }
@@ -35,17 +35,16 @@ function refreshPage() {
 }
 
 
-function PostForm() {
+const PostForm = (props) => {
   //Upsert Section
   let postId = 0
-  const authorId = "1"
   const [title, setTitle] = React.useState('')
 
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
-    if (title.length !== 0) { executeUpsert({ authorId, postId, title }) }
-  }, [executeUpsert, authorId, postId, title])
-
+    if (title.length !== 0) { executeUpsert({ postId, title }); console.log(title) }
+  }, [executeUpsert, postId, title])
+  console.log(props)
 
   return (
     <Col sm={6}>
@@ -61,10 +60,17 @@ function PostForm() {
           <Button
             variant="outline-secondary"
             disabled={upsertState.fetching}
-            onClick={() => { upsert(); refreshPage(); }}
+            type="submit"
+            onClick={() => { upsert(); }}
           >Add</Button>
         </InputGroup.Append>
       </InputGroup>
+      <Button
+        variant="outline-secondary"
+        disabled={upsertState.fetching}
+        type="submit"
+        onClick={() => { props.handleLogout() }}
+      >Logout</Button>
     </Col>
   )
 }
@@ -102,12 +108,12 @@ const PostList = () => {
   );
 };
 
-const Combine = () => {
+const Combine = (props) => {
   return (
     <>
       <br></br>
       <Row className="justify-content-md-center">
-        <PostForm />
+        <PostForm handleLogout={props.handleLogout} />
       </Row>
       <br></br>
       <Row className="justify-content-md-center">
