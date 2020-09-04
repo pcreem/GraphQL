@@ -93,14 +93,6 @@ const Login = props => {
             )
             }
 
-
-            {/* <Button variant="outline-secondary"
-              disabled={state.fetching}
-
-              onClick={() => { getToken(); }} >
-              {"getToken"}
-            </Button> */}
-
           </Form>
         </Col>
       </Row>

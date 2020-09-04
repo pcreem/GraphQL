@@ -4,14 +4,14 @@ import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'urql';
 // import { getToken, deleteToken } from '../token'
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   {
-    info(authorId:"1"){
+    info{
         id
         title
       }
   }
-`
+`;
 
 const UPSERT_POST = gql`
   mutation upsertPost( $postId:ID!, $title: String!) {
@@ -30,10 +30,9 @@ const DELETE_POST = gql`
   }
 `
 
-function refreshPage() {
-  window.location.reload(false);
-}
-
+// function refreshPage() {
+//   window.location.reload(false);
+// }
 
 const PostForm = (props) => {
   //Upsert Section
@@ -42,9 +41,8 @@ const PostForm = (props) => {
 
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
-    if (title.length !== 0) { executeUpsert({ postId, title }); console.log(title) }
+    if (title.length !== 0) { executeUpsert({ postId, title }); }
   }, [executeUpsert, postId, title])
-  console.log(props)
 
   return (
     <Col sm={6}>
@@ -85,12 +83,14 @@ function Post({ post }) {
 
   return (
     <Col sm={6}>
-      <Alert variant="light" disabled={deleteState.fetching} onClose={() => { del(); refreshPage(); }} dismissible>
+      <Alert variant="light" disabled={deleteState.fetching} onClose={() => { del(); }} dismissible>
         <p>{post.title}</p>
       </Alert>
     </Col>
   )
 }
+
+
 
 const PostList = () => {
   const [result] = useQuery({ query: FEED_QUERY })
