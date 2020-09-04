@@ -22,6 +22,9 @@ const cache = cacheExchange({
           }
         });
       },
+      deletePost: (result, args, cache, info) => {
+        cache.invalidate({ __typename: 'Post', id: result.deletePost.id });
+      },
     },
   },
 });
