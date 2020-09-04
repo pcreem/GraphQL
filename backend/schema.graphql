@@ -1,5 +1,5 @@
 type Query {
-  info(authorId: ID!): [Post!]!
+  info: [Post!]!
 }
 
 type Mutation {
