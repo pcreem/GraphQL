@@ -1,4 +1,5 @@
 import React from 'react'
+import { Container } from 'react-bootstrap';
 // import Combine from './Post'
 import Login from './Login'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,7 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const App = () => {
   return (
     <>
-      <Login />
+      <Container>
+        <Login />
+      </Container>
     </>
   )
 }

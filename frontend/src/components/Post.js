@@ -5,7 +5,7 @@ import { useQuery, useMutation } from 'urql';
 // import { getToken, deleteToken } from '../token'
 
 export const FEED_QUERY = gql`
-  {
+  query{
     info{
         id
         title

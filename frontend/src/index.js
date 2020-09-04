@@ -3,13 +3,28 @@ import ReactDOM from 'react-dom'
 import './styles/index.css'
 import App from './components/App'
 import * as serviceWorker from './serviceWorker';
-import { Container } from 'react-bootstrap';
-import { getToken } from './token'
 
+import { getToken } from './token'
 import { Provider, Client, dedupExchange, fetchExchange } from 'urql'
 import { cacheExchange } from '@urql/exchange-graphcache'
+import { FEED_QUERY } from './components/Post.js'
 
-const cache = cacheExchange({})
+const cache = cacheExchange({
+  updates: {
+    Mutation: {
+      upsertPost: (result, args, cache, info) => {
+        cache.updateQuery({ query: FEED_QUERY }, data => {
+          if (data !== null) {
+            data.info.unshift(result.upsertPost);
+            return data;
+          } else {
+            return null
+          }
+        });
+      },
+    },
+  },
+});
 
 const client = new Client({
   url: 'http://localhost:4000',
@@ -23,11 +38,9 @@ const client = new Client({
 })
 
 ReactDOM.render(
-  <Container>
-    <Provider value={client}>
-      <App />
-    </Provider>
-  </Container>,
+  <Provider value={client}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )
 
