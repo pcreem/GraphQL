@@ -2,7 +2,6 @@ import React from 'react'
 import { InputGroup, FormControl, Button, Col, Row, Alert, Spinner } from 'react-bootstrap';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'urql';
-// import { getToken, deleteToken } from '../token'
 
 export const FEED_QUERY = gql`
   query{
@@ -30,10 +29,6 @@ const DELETE_POST = gql`
   }
 `
 
-// function refreshPage() {
-//   window.location.reload(false);
-// }
-
 const PostForm = (props) => {
   //Upsert Section
   let postId = 0
@@ -41,16 +36,17 @@ const PostForm = (props) => {
 
   const [upsertState, executeUpsert] = useMutation(UPSERT_POST)
   const upsert = React.useCallback(() => {
-    if (title.length !== 0) { executeUpsert({ postId, title }); }
+    if (title.length !== 0 && title.length <= 30) { executeUpsert({ postId, title }); }
   }, [executeUpsert, postId, title])
 
   return (
-    <Col sm={6}>
+    <Col sm={8}>
       <InputGroup className="mb-3">
         <FormControl
           placeholder='Add Todo...'
           aria-label="Recipient's username"
           aria-describedby="basic-addon2"
+          maxLength="30"
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
@@ -59,16 +55,10 @@ const PostForm = (props) => {
             variant="outline-secondary"
             disabled={upsertState.fetching}
             type="submit"
-            onClick={() => { upsert(); }}
+            onClick={() => { upsert(); setTitle('') }}
           >Add</Button>
-        </InputGroup.Append>
+        </InputGroup.Append>{'  '}
       </InputGroup>
-      <Button
-        variant="outline-secondary"
-        disabled={upsertState.fetching}
-        type="submit"
-        onClick={() => { props.handleLogout() }}
-      >Logout</Button>
     </Col>
   )
 }
@@ -82,7 +72,7 @@ function Post({ post }) {
   }, [executeDelete, postId])
 
   return (
-    <Col sm={6}>
+    <Col >
       <Alert variant="light" disabled={deleteState.fetching} onClose={() => { del(); }} dismissible>
         <p>{post.title}</p>
       </Alert>
@@ -108,14 +98,14 @@ const PostList = () => {
   );
 };
 
-const Combine = (props) => {
+const Todo = (props) => {
   return (
     <>
       <br></br>
       <Row className="justify-content-md-center">
         <PostForm handleLogout={props.handleLogout} />
       </Row>
-      <br></br>
+      <hr></hr>
       <Row className="justify-content-md-center">
         <PostList />
       </Row>
@@ -124,4 +114,4 @@ const Combine = (props) => {
 
 }
 
-export default Combine
+export default Todo
