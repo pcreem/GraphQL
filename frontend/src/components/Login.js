@@ -3,6 +3,7 @@ import { Form, Button, Col, Row } from 'react-bootstrap';
 import gql from 'graphql-tag'
 import { useMutation } from 'urql'
 import { setToken, getToken, deleteToken } from '../token'
+import { setUserName, getUserName, deleteUserName } from '../token'
 import Todo from './Post'
 import Nav from './Nav'
 
@@ -10,6 +11,10 @@ const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
     signup(email: $email, password: $password, name: $name) {
       token
+      user{
+        id
+        name
+      }
     }
   }
 `
@@ -18,6 +23,10 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user{
+        id
+        name
+      }
     }
   }
 `
@@ -38,17 +47,25 @@ const Login = props => {
     executeMutation({ email, password, name })
       .then(({ data }) => {
         const token = data && data[switchLogin ? 'login' : 'signup'].token
+
         if (token) {
+          const user = data && data[switchLogin ? 'login' : 'signup'].user
+          setUserName(user.name)
           setToken(token)
           setLogin(!!getToken())
         }
       });
   }, [executeMutation, switchLogin, email, password, name]);
 
-  return (
+  function refreshPage() {
+    deleteToken(); deleteUserName(); setLogin(!!getToken());
+    window.location.reload(false);
+  }
 
+
+  return (
     <>
-      <Nav isLogin={isLogin} handleLogout={() => { deleteToken(); setLogin(!!getToken()); }} />
+      <Nav name={getUserName()} isLogin={isLogin} handleLogout={() => { refreshPage(); }} />
       <Row className="justify-content-md-center" style={{ marginTop: 100 }}>
         <Col sm={6} >
           {!isLogin && (

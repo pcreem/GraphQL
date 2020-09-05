@@ -8,10 +8,15 @@ const Nav = (props) => {
         <Navbar.Brand>
           TodoList
         </Navbar.Brand>
+
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {props.isLogin && (
             <>
+              <Navbar.Text style={{ marginRight: 10 }}>
+                Hi: {props.name}
+              </Navbar.Text>
+
               <Button
                 variant="outline-secondary"
                 type="submit"
