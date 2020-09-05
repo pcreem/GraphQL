@@ -5,10 +5,14 @@ const session = require("express-session");
 require('dotenv').config()
 const Query = require('./resolvers/query.js')
 const Mutation = require('./resolvers/mutation.js')
+const User = require('./resolvers/user.js')
+const Post = require('./resolvers/post.js')
 
 const resolvers = {
   Query,
   Mutation,
+  User,
+  Post
 }
 
 const server = new GraphQLServer({
