@@ -45,7 +45,10 @@ const Login = props => {
 
   const mutate = React.useCallback(() => {
     executeMutation({ email, password, name })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+
+        if (error) return null
+
         const token = data && data[switchLogin ? 'login' : 'signup'].token
 
         if (token) {
