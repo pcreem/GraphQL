@@ -17,7 +17,7 @@
 後端為GraphQL介面,可以透過指令簡易擷取database層狀資料
 在畫面左側輸入以下指令
 
-Login:
+### Login:
 ```
 mutation {
   login(
@@ -37,13 +37,15 @@ mutation {
 }
 ```
 
-新增todo:
-1.將得到的token以下列型式貼到左下方Header
+### 新增todo:
+
+#### 1.將得到的token以下列型式貼到左下方Header
+
 ```
 { "Authorization": "Bearer __Token__ }
 ```
 
-2.將下列code貼到左側命令欄
+#### 2.將下列code貼到左側命令欄
 ```
 mutation {
   upsertPost(
@@ -56,7 +58,7 @@ mutation {
 }
 ```
 
-刪除todo:
+### 刪除todo:
 ```
 mutation {
   deletePost(
