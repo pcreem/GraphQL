@@ -2,17 +2,17 @@
 主要以GraphQL為概念開發的TodoList. 使用此技術大幅減少擷取層狀資料複雜度
 
 
-## 前端使用介面體驗 
-![前端](https://imgur.com/Tp8IJuw)
-Format: ![Alt Text](url)
+## 前端
+![Project Look1](https://imgur.com/Tp8IJuw.png)
+## 後端
+![Project Look2](https://imgur.com/UC5N74n.png)
 
+
+## 前端使用介面體驗 
 [連結](https://react-todo-orcin.vercel.app/)
 可自行SignUp帳號或是使用測試帳號(email: qwe@qwe.io password:qwe)後使用TodoList
 
 ## 後端使用介面體驗 
-![後端](https://imgur.com/UC5N74n)
-Format: ![Alt Text](url)
-
 [連結](https://prisma--deploy.herokuapp.com/)
 後端為GraphQL介面,可以透過指令簡易擷取database層狀資料
 在畫面左側輸入以下指令
