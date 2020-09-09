@@ -4,33 +4,6 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const APP_SECRET = process.env.APP_SECRET
 
-function createPost(parent, args, context, info) {
-  const userId = getUserId(context)
-  const newPost = context.prisma.post.create({
-    data: {
-      title: args.title,
-      content: args.content,
-      author: {
-        connect: { id: parseInt(userId) },
-      },
-    },
-  })
-  return newPost
-}
-
-function updatePost(parent, args, context, info) {
-  const updatedPost = context.prisma.post.update({
-    where: {
-      id: parseInt(args.postId),
-    },
-    data: {
-      title: args.title,
-      content: args.content,
-    },
-  })
-  return updatedPost
-}
-
 function upsertPost(parent, args, context, info) {
   const userId = getUserId(context)
   const upsertPost = context.prisma.post.upsert({
@@ -94,8 +67,6 @@ async function login(parent, args, context, info) {
 }
 
 module.exports = {
-  createPost,
-  updatePost,
   upsertPost,
   deletePost,
 

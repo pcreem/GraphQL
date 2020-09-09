@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const { GraphQLServer } = require('graphql-yoga')
-require('dotenv').config()
+
 const Query = require('./resolvers/query.js')
 const Mutation = require('./resolvers/mutation.js')
 const User = require('./resolvers/user.js')

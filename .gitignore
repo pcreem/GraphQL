@@ -5,3 +5,6 @@ backend/prisma/.env
 backend/.env
 frontend/.env
 .gitignore
+backend/ngrok.exe
+backend/yarn.lock
+frontend/ngrok.exe
