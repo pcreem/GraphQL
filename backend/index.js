@@ -23,6 +23,8 @@ const server = new GraphQLServer({
       prisma,
     }
   },
+  introspection: false,
+  playground: false
 })
 
 const PORT = process.env.PORT || 4000

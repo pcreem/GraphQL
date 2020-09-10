@@ -59,6 +59,13 @@ async function login(parent, args, context, info) {
     throw new Error('Invalid password')
   }
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
+  const options = {
+    maxAge: 1000 * 60 * 60 * 24, //expires in a day
+    httpOnly: true, // cookie is only accessible by the server
+    secure: true, // only transferred over https
+    sameSite: true, // only sent for requests to the same FQDN as the domain in the cookie
+  }
+  context.request.res.cookie('token', token, options)
 
   return {
     token,
